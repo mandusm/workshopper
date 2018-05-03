@@ -16,6 +16,7 @@ module Workshopper
       @data['id'] ||= Digest::SHA256.hexdigest(@url)
       @data['name'] ||= ''
       @data['content'] ||= {}
+      @data['logo'] ||= ''
 
       if ENV['CONTENT_URL_PREFIX']
         @data['content']['url'] = ENV['CONTENT_URL_PREFIX']
@@ -32,8 +33,9 @@ module Workshopper
 
     def setup
       @loader = Loader.new(@data['content']['url'])
-
-      @modules_data = YAML.load(@loader.get('_modules.yml'))
+      
+      file = @data['content']['module_file'].nil? ? "_modules.yml" : @data['content']['module_file']
+      @modules_data = YAML.load(@loader.get(file))
 
       @modules_data['config'] ||= {}
       @modules_data['config']['vars'] ||= {}
@@ -109,6 +111,22 @@ module Workshopper
 
     def name
       @data['name']
+    end
+    
+    def workshop_title
+      @data['workshop_title']
+    end
+    
+    def logo
+      @data['logo']
+    end
+    
+    def repo_url
+      @data['repo_url']
+    end
+    
+    def enable_issue_submission
+      @data['enable_issue_submission']
     end
 
     def modules

@@ -40,7 +40,16 @@ module Workshopper
 
     get '/api/workshops' do
       content_type :json
-      deployment.workshops.values.map { |w| { id: w.id, name: w.name }}.to_json
+      deployment.workshops.values.map { |w| 
+        { 
+          id: w.id, 
+          name: w.name, 
+          logo: w.logo, 
+          workshop_title: w.workshop_title,
+          repo_url: w.repo_url,
+          enable_issue_submission: w.enable_issue_submission
+        }
+      }.to_json
     end
 
     get '/api/workshops/:name' do
@@ -49,7 +58,11 @@ module Workshopper
       {
         id: params[:name],
         modules: modules,
-        name: deployment.workshops[params[:name]].name
+        name: deployment.workshops[params[:name]].name,
+        logo: deployment.workshops[params[:name]].logo,
+        workshop_title: deployment.workshops[params[:name]].workshop_title,
+        repo_url: deployment.workshops[params[:name]].repo_url,
+        enable_issue_submission: deployment.workshops[params[:name]].enable_issue_submission
       }.to_json
     end
 

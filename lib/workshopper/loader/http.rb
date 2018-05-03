@@ -8,7 +8,10 @@ module Workshopper
       class << self
 
         def get(path)
-          Faraday.get(path).body
+          @resp = Faraday.get(path)
+          puts @resp.body.inspect
+          raise Errno::ENOENT if @resp.body.chomp == "404: Not Found"
+          @resp.body
         end
 
       end

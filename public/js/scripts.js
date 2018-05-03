@@ -1,3 +1,8 @@
+var pageX;
+var pageY;
+var repoURL;
+var enableIssueSubmission;
+
 var Route = function (pattern, route) {
     this.pattern = pattern;
     this.route = route;
@@ -47,8 +52,9 @@ var EvMan = function () {
     self.index = function(match) {
         $.get('/api/workshops', function(workshops) {
 
-            $('#workshopName').html('Workshopper');
-
+            $('.workshopName').html('AWS Workshops');
+            $('.workshopLogo').attr("src", "/api/workshops/"+workshops[0].id+"/content/assets/images/"+workshops[0].logo)
+            
             if (Object.keys(workshops).length === 1) {
                 var ws = workshops[Object.keys(workshops)[0]];
                 location.hash = '/workshop/' + ws.id;
@@ -90,6 +96,11 @@ var EvMan = function () {
 
             $.get("/api/workshops/" + workshop, function(tmp) {
                 data.workshop = tmp;
+                repoURL = data.workshop.repo_url;
+                enableIssueSubmission = data.workshop.enable_issue_submission;
+                
+                $('.workshopTitle').text(data.workshop.workshop_title);
+                $('.workshopLogo').attr("src", "/api/workshops/"+data.workshop.id+"/content/assets/images/"+data.workshop.logo)
 
                 $.get("/api/workshops/" + workshop + "/modules", function(modules) {
                     data.modules = modules;
@@ -109,7 +120,7 @@ var EvMan = function () {
                             }
                         }
 
-                        $('title').html(data.workshop.name);
+                        $('.workshopTitle').html(data.workshop.workshop_title);
 
                         if (modules[module] !== null && modules[module].requires !== null && modules[module].requires.length > 0) {
                             var prereqs = $("<div/>");
@@ -137,7 +148,28 @@ var EvMan = function () {
                             if (Object.keys(workshops).length === 1) {
                                 $('#breadcrumbs').css('display', 'none');
                             }
-                            $('#workshopName').html(data.workshop.name);
+                            $('.workshopName').text(data.workshop.name);
+    
+                            var pre = document.getElementsByTagName('pre');
+                            for (var i = 0; i < pre.length; i++) {
+                              var button = document.createElement('button');
+                              button.className = 'btn fa fa-copy';
+                              pre[i].appendChild(button);
+                            }
+
+                            var clipboard = new Clipboard('.btn', {
+                              target: function(trigger) {return trigger.previousElementSibling;}
+                            });
+
+                            function showSuccess(elem){elem.setAttribute('class','btn fa fa-check');}
+                            function sleep (time) {
+                              return new Promise((resolve) => setTimeout(resolve, time));
+                            }
+                            clipboard.on('success',function(e){
+                              showSuccess(e.trigger);
+                              sleep(350).then(() => {e.clearSelection();
+                                e.trigger.setAttribute('class','btn fa fa-copy');})
+                            });
                         });
                     });
                 });
@@ -180,4 +212,59 @@ $(function() {
 
 $(window).on('hashchange', function() {
     window.evman.router.route();
+});
+
+
+if (!window.x) {
+    x = {};
+}
+
+x.Selector = {};
+x.Selector.getSelected = function() {
+  var t = '';
+  if (window.getSelection) {
+    t = window.getSelection();
+  } else if (document.getSelection) {
+    t = document.getSelection();
+  } else if (document.selection) {
+    t = document.selection.createRange().text;
+  }
+  return t;
+}
+
+$(document).ready(function() {
+  $(document).bind("mouseup", function() {
+    if(enableIssueSubmission === true) {
+      var selectedText = x.Selector.getSelected();
+      if(selectedText != ''){
+        $('ul.selection-tools').css({
+          'left': pageX + 5,
+          'top' : pageY + 15
+        }).fadeIn(200);
+      } else {
+        $('ul.selection-tools').fadeOut(200);
+      }
+    }
+  });
+  $(document).on("mousedown", function(e){
+    pageX = e.pageX;
+    pageY = e.pageY;
+  });
+  
+  $(".github-issue").click(function(evt) {
+    var selectedText = x.Selector.getSelected();
+    
+    pagetitle = $('title').text();
+    baseURI = selectedText.baseNode.baseURI;
+    selected = selectedText.toString();
+    text = `Track: ${pagetitle}
+Text: ${selected}
+Issue Base URL: ${baseURI}`;
+    
+    url = repoURL+"/issues/new?body="+encodeURI(text)
+    var win = window.open(url, '_blank');
+    win.focus();
+    evt.preventDefault(); 
+    return false;
+  })
 });
