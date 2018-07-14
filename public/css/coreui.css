@@ -588,6 +588,8 @@ pre {
   font-size: 90%;
   color: #263238; }
   pre code {
+    max-height: 400px;
+    overflow: scroll;
     padding: 0;
     font-size: inherit;
     color: inherit;

@@ -36,7 +36,7 @@ pre > code.hljs {
     background-color: #F0F3F5; 
     -webkit-border-radius: 5px; 
     border-radius: 5px; 
-    padding: 1.5em 2.5em; 
+    /*padding: 1.5em 2.5em;*/ 
     word-wrap: break-word; 
 }
 
@@ -160,7 +160,7 @@ table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p { font-si
 .sidebarblock h1.subheader, .sidebarblock h2.subheader, .sidebarblock h3.subheader, .sidebarblock .subheader#toctitle, .sidebarblock > .content > .subheader.title, .sidebarblock h4.subheader, .sidebarblock h5.subheader, .sidebarblock h6.subheader { line-height: 1.4; }
 .sidebarblock > .content > .title { color: #7a2518; margin-top: 0; line-height: 1.6; }
 .exampleblock > .content > :last-child > :last-child, .exampleblock > .content .olist > ol > li:last-child > :last-child, .exampleblock > .content .ulist > ul > li:last-child > :last-child, .exampleblock > .content .qlist > ol > li:last-child > :last-child, .sidebarblock > .content > :last-child > :last-child, .sidebarblock > .content .olist > ol > li:last-child > :last-child, .sidebarblock > .content .ulist > ul > li:last-child > :last-child, .sidebarblock > .content .qlist > ol > li:last-child > :last-child { margin-bottom: 0; }
-.literalblock pre, .literalblock pre[class], .listingblock pre, .listingblock pre[class] { border: 0px; background-color: #F0F3F5; -webkit-border-radius: 5px; border-radius: 5px; padding: 1.5em 2.5em; word-wrap: break-word; }
+.literalblock pre, .literalblock pre[class], .listingblock pre, .listingblock pre[class] { border: 0px; background-color: #F0F3F5; -webkit-border-radius: 5px; border-radius: 5px; padding: 0.4em 0.5em; word-wrap: break-word; }
 .literalblock pre.nowrap, .literalblock pre[class].nowrap, .listingblock pre.nowrap, .listingblock pre[class].nowrap { overflow-x: auto; white-space: pre; word-wrap: normal; }
 .literalblock pre > code, .literalblock pre[class] > code, .listingblock pre > code, .listingblock pre[class] > code { display: block; }
 .listingblock > .content { position: relative; }
